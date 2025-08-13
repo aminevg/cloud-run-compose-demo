@@ -8,20 +8,16 @@ WORKDIR /usr/src/app
 # install dependencies into temp directory
 # this will cache them and speed up future builds
 FROM base AS install
-# install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
 COPY package.json bun.lock /temp/prod/
-COPY packages/backend/package.json /temp/prod/packages/backend/
-COPY packages/frontend/package.json /temp/prod/packages/frontend/
-RUN cd /temp/prod && bun install --filter "backend" --frozen-lockfile --production
+# install with --production (exclude devDependencies)
+RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY packages/backend packages/backend
-COPY package.json package.json
+COPY . .
 
 # run the app
 USER bun
-WORKDIR /usr/src/app/packages/backend
 ENTRYPOINT [ "bun", "run", "prod" ]

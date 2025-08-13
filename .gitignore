@@ -13,6 +13,10 @@ coverage
 # logs
 logs
 _.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # dotenv environment variable files
@@ -20,6 +24,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 .env.local
 
 # caches
@@ -38,3 +43,8 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 terraform.tfvars
 terraform.tfstate*
 .terraform.tfstate*
+
+# generated Astro types
+.astro/
+
+cloudbuild.yaml

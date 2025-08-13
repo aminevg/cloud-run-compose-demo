@@ -10,9 +10,7 @@ WORKDIR /usr/src/app
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
-COPY packages/backend/package.json /temp/dev/packages/backend/
-COPY packages/frontend/package.json /temp/dev/packages/frontend/
-RUN cd /temp/dev && bun install --filter "frontend" --frozen-lockfile
+RUN cd /temp/dev && bun install --frozen-lockfile
 
 # copy node_modules from temp directory
 # then copy all (non-ignored) project files into the image
@@ -21,17 +19,15 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
 # build
-RUN bun run --filter "frontend" build
+RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM base AS release
-COPY --from=prerelease /usr/src/app/packages/frontend/dist packages/frontend/dist
-COPY --from=prerelease /usr/src/app/packages/frontend/package.json packages/frontend/package.json
+COPY --from=prerelease /usr/src/app/dist dist
+COPY --from=prerelease /usr/src/app/package.json package.json
 
 # run the app
 USER bun
-WORKDIR /usr/src/app/packages/frontend
-
 ENV HOST=0.0.0.0
 ENV PORT=4321
 EXPOSE 4321

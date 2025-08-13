@@ -1,8 +1,6 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
+    build: ./packages/backend
 
     ports:
       - 3000:3000
@@ -15,9 +13,7 @@ services:
 
   frontend:
     x-google-cloudrun-ingress-container: true
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    build: ./packages/frontend
 
     ports:
       - 4321:4321
