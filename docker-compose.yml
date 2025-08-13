@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+
+    ports:
+      - 3000:3000
+    
+    networks:
+      - cloud-run-vpc-terraform-sample-network
+    
+    environment:
+      - BACKEND_PORT=3000
+
+  frontend:
+    x-google-cloudrun-ingress-container: true
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+
+    ports:
+      - 4321:4321
+
+    networks:
+      - cloud-run-vpc-terraform-sample-network
+    
+    environment:
+      - BACKEND_URL=http://backend:3000
+    
+    depends_on:
+      - backend
+
+networks:
+  cloud-run-vpc-terraform-sample-network:
